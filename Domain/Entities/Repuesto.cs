@@ -14,6 +14,7 @@ public class Repuesto : BaseEntity
     public int StockActual { get; set; }
     public int StockMinimo { get; set; }
     public int StockCritico { get; set; }
+    public int StockReservado { get; set; }
     public string? Unidad { get; set; }
     public string? Ubicacion { get; set; }
     public bool Activo { get; set; } = true;

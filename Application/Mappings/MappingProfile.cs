@@ -60,7 +60,8 @@ public class MappingProfile : Profile
         // Repuestos
         CreateMap<Repuesto, RepuestoDto>()
             .ForCtorParam("Categoria", o => o.MapFrom(s => s.CategoriaRepuesto != null ? s.CategoriaRepuesto.Nombre : null))
-            .ForCtorParam("TipoServicioNombre", o => o.MapFrom(s => s.TipoServicio != null ? s.TipoServicio.Nombre : null));
+            .ForCtorParam("TipoServicioNombre", o => o.MapFrom(s => s.TipoServicio != null ? s.TipoServicio.Nombre : null))
+            .ForCtorParam("StockBajo", o => o.MapFrom(s => s.StockActual <= s.StockMinimo));
         CreateMap<CreateRepuestoDto, Repuesto>();
         CreateMap<UpdateRepuestoDto, Repuesto>()
             .ForAllMembers(o => o.Condition((src, dest, val) => val != null));

@@ -88,6 +88,8 @@ public record UpdateClienteDto(
 public record ClienteFiltroDto(
     string? Busqueda,
     string? TipoDocumento,
+    string? Nombre,
+    string? Correo,
     int PageNumber = 1,
     int PageSize = 10
 );

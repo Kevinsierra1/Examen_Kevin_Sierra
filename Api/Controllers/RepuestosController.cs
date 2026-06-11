@@ -64,4 +64,34 @@ public class RepuestosController : ControllerBase
         await _mediator.Send(new DeleteRepuestoCommand(id), ct);
         return NoContent();
     }
+
+    /// <summary>Reserva stock de un repuesto para una orden de servicio</summary>
+    [HttpPost("reservas")]
+    [Authorize(Roles = "Admin,Recepcionista,JefeAlmacen,JefeBodega,Mecánico,MecanicoDiagnostico,MecanicoArea")]
+    [ProducesResponseType(204)]
+    public async Task<IActionResult> Reservar([FromBody] ReservaRepuestoDto dto, CancellationToken ct)
+    {
+        await _mediator.Send(new ReservaRepuestoCommand(dto), ct);
+        return NoContent();
+    }
+
+    /// <summary>Descuenta definitivamente el stock de un repuesto al cerrar la orden</summary>
+    [HttpPost("consumos")]
+    [Authorize(Roles = "Admin,Recepcionista,JefeAlmacen,JefeBodega,Mecánico,MecanicoDiagnostico,MecanicoArea")]
+    [ProducesResponseType(204)]
+    public async Task<IActionResult> Consumir([FromBody] ConsumoRepuestoDto dto, CancellationToken ct)
+    {
+        await _mediator.Send(new ConsumoRepuestoCommand(dto), ct);
+        return NoContent();
+    }
+
+    /// <summary>Libera una reserva de stock de un repuesto cuando la orden se cancela</summary>
+    [HttpPost("liberaciones")]
+    [Authorize(Roles = "Admin,Recepcionista,JefeAlmacen,JefeBodega,Mecánico,MecanicoDiagnostico,MecanicoArea")]
+    [ProducesResponseType(204)]
+    public async Task<IActionResult> Liberar([FromBody] LiberacionRepuestoDto dto, CancellationToken ct)
+    {
+        await _mediator.Send(new LiberacionRepuestoCommand(dto), ct);
+        return NoContent();
+    }
 }

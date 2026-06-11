@@ -38,6 +38,10 @@ public record UpdateVehiculoDto(
 public record VehiculoFiltroDto(
     string? Placa,
     string? Vin,
+    string? Marca,
+    string? Modelo,
+    int? AnioDesde,
+    int? AnioHasta,
     Guid? MarcaId,
     Guid? ClienteId,
     bool? Activo,

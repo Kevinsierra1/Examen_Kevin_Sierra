@@ -13,6 +13,8 @@ public record RepuestoDto(
     decimal PrecioVenta,
     int StockActual,
     int StockMinimo,
+    int StockReservado,
+    bool StockBajo,
     string? Unidad,
     bool Activo
 );
@@ -49,4 +51,28 @@ public record RepuestoFiltroDto(
     bool? Activo,
     int PageNumber = 1,
     int PageSize = 10
+);
+
+// Reserva el stock disponible (StockActual - StockReservado) para una orden de servicio
+public record ReservaRepuestoDto(
+    Guid RepuestoId,
+    int Cantidad,
+    Guid OrdenServicioId,
+    string? Motivo
+);
+
+// Descuenta definitivamente el stock al cerrar la orden, liberando la reserva asociada
+public record ConsumoRepuestoDto(
+    Guid RepuestoId,
+    int Cantidad,
+    Guid OrdenServicioId,
+    string? Motivo
+);
+
+// Libera una reserva de stock cuando la orden se cancela, sin afectar el stock actual
+public record LiberacionRepuestoDto(
+    Guid RepuestoId,
+    int Cantidad,
+    Guid OrdenServicioId,
+    string? Motivo
 );

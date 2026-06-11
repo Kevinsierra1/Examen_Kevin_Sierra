@@ -42,6 +42,18 @@ public class GetClientesQueryHandler : IRequestHandler<GetClientesQuery, PagedRe
         }
         if (!string.IsNullOrWhiteSpace(f.TipoDocumento))
             q = q.Where(c => c.TipoDocumento != null && c.TipoDocumento.Nombre == f.TipoDocumento);
+        if (!string.IsNullOrWhiteSpace(f.Nombre))
+        {
+            var patron = $"%{f.Nombre.Trim()}%";
+            q = q.Where(c => EF.Functions.ILike(c.Nombres, patron) || EF.Functions.ILike(c.Apellidos, patron));
+        }
+        if (!string.IsNullOrWhiteSpace(f.Correo))
+        {
+            var correo = f.Correo.Trim();
+            var patron = $"%{correo}%";
+            q = q.Where(c => c.Email != null && (c.Email == correo || EF.Functions.ILike(c.Email, patron)));
+        }
+        q = q.OrderBy(c => c.Nombres).ThenBy(c => c.Apellidos);
         return await q.ProjectTo<ClienteDto>(_mapper.ConfigurationProvider).ToPagedResultAsync(f.PageNumber, f.PageSize, cancellationToken);
     }
 }

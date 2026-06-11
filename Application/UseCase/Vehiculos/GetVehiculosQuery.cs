@@ -28,12 +28,19 @@ public class GetVehiculosQueryHandler : IRequestHandler<GetVehiculosQuery, Paged
         if (!string.IsNullOrWhiteSpace(f.Placa))
             q = q.Where(v => EF.Functions.ILike(v.Placa, $"%{f.Placa.Trim()}%"));
         if (!string.IsNullOrWhiteSpace(f.Vin))
-            q = q.Where(v => v.Vin != null && EF.Functions.ILike(v.Vin, $"%{f.Vin.Trim()}%"));
+            q = q.Where(v => v.Vin == f.Vin.Trim());
+        if (!string.IsNullOrWhiteSpace(f.Marca))
+            q = q.Where(v => EF.Functions.ILike(v.ModeloVehiculo.Marca.Nombre, $"%{f.Marca.Trim()}%"));
+        if (!string.IsNullOrWhiteSpace(f.Modelo))
+            q = q.Where(v => EF.Functions.ILike(v.ModeloVehiculo.Nombre, $"%{f.Modelo.Trim()}%"));
+        if (f.AnioDesde.HasValue) q = q.Where(v => v.Anio >= f.AnioDesde);
+        if (f.AnioHasta.HasValue) q = q.Where(v => v.Anio <= f.AnioHasta);
         if (f.Activo.HasValue) q = q.Where(v => v.Activo == f.Activo);
         // Solo vehículos que pertenecen al cliente indicado (propietario activo)
         if (f.ClienteId.HasValue)
             q = q.Where(v => v.Propietarios != null &&
                 v.Propietarios.Any(p => p.ClienteId == f.ClienteId && p.Activo));
+        q = q.OrderBy(v => v.ModeloVehiculo.Marca.Nombre).ThenBy(v => v.ModeloVehiculo.Nombre);
         return await q.ProjectTo<VehiculoDto>(_mapper.ConfigurationProvider).ToPagedResultAsync(f.PageNumber, f.PageSize, cancellationToken);
     }
 }
